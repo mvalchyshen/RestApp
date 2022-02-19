@@ -37,8 +37,8 @@ public class MedicalDelegateService implements BaseService<MedicalDelegate, Long
     }
 
     @Override
-    public Collection<MedicalDelegate> findAll() {
-        return medicalDelegateRepository.findAll();
+    public List<MedicalDelegate> findAll() {
+        return new ArrayList<>(medicalDelegateRepository.findAll());
     }
 
     @Override

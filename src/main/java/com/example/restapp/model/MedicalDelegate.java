@@ -1,13 +1,12 @@
 package com.example.restapp.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerator;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -24,7 +23,11 @@ public class MedicalDelegate implements BaseEntity<Long> {
     private String lastname;
     private String email;
     private String phoneNumber;
-    @OneToMany(mappedBy = "medicalDelegate",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "medicalDelegate", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @JsonIdentityInfo(
+            property = "id",
+            generator = ObjectIdGenerators.PropertyGenerator.class)
     private Set<Doctor> doctors;
-
 }

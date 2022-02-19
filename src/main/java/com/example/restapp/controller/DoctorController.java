@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.example.restapp.controller.Endpoints.DOCTOR;
-import static com.example.restapp.controller.Endpoints.ID;
+import static com.example.restapp.controller.Endpoints.*;
 
 @RestController
 @RequestMapping(DOCTOR)
@@ -26,7 +25,7 @@ public class DoctorController {
     }
 
     @GetMapping(ID)
-    public ResponseEntity<Doctor> getById(@RequestParam("id") Long uuid) {
+    public ResponseEntity<Doctor> getById(@PathVariable("id") Long uuid) {
         return ResponseEntity.ok(doctorService.findById(uuid));
     }
 
@@ -36,10 +35,19 @@ public class DoctorController {
     }
 
     @DeleteMapping(ID)
-    public ResponseEntity<ApiResponse> deleteDoctor(@RequestParam("id") Long id){
-        return ResponseEntity.ok(ApiResponse.builder()
+    public ResponseEntity<ApiResponse> deleteDoctor(@PathVariable("id") Long id){
+        doctorService.delete(id);
+        return new ResponseEntity<>(ApiResponse.builder()
                 .status(204)
                 .message("deleted")
-                .build());
+                .build(), HttpStatus.NO_CONTENT);
+    }
+    @RequestMapping(value = ID+MEDICAL_DELEGATE, method = RequestMethod.GET)
+    public ResponseEntity<?> getMedicalDelegateByDoctorId(@PathVariable("id") Long id) {
+        try {
+            return ResponseEntity.ok(doctorService.getMedicalDelegate(id));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(ApiResponse.builder().status(500).message("delegate not found"));
+        }
     }
 }

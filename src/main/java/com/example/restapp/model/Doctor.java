@@ -3,7 +3,6 @@ package com.example.restapp.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -17,9 +16,12 @@ public class Doctor implements BaseEntity<Long> {
     private Long id;
     private String firstname;
     private String lastname;
+    @Column(unique = true)
     private String email;
     private String phoneNumber;
-    @ManyToOne
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "medical_delegate_id")
     private MedicalDelegate medicalDelegate;
 }

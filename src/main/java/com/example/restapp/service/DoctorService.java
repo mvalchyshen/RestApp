@@ -1,18 +1,24 @@
 package com.example.restapp.service;
 
+import com.example.restapp.mapper.MedicalDelegateMapper;
 import com.example.restapp.model.Doctor;
+import com.example.restapp.model.MedicalDelegate;
+import com.example.restapp.model.dto.MedicalDelegateDTO;
 import com.example.restapp.repository.DoctorRepository;
+import com.example.restapp.repository.MedicalDelegateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class DoctorService implements BaseService<Doctor, Long> {
 
     private final DoctorRepository doctorRepository;
-
+    private final MedicalDelegateMapper mapper;
     @Override
     public Doctor save(Doctor doctor) {
         return doctorRepository.save(doctor);
@@ -53,5 +59,13 @@ public class DoctorService implements BaseService<Doctor, Long> {
     public void delete(Long uuid) {
         if (existsById(uuid)) doctorRepository.deleteById(uuid);
         else throw new RuntimeException("Doctor with such id not found");
+    }
+
+    public MedicalDelegateDTO getMedicalDelegate(Long id) {
+        Optional<Doctor> doctor = doctorRepository.findById(id);
+        if (doctor.isPresent()) {
+            return mapper.toMedicalDTO(doctor.get().getMedicalDelegate());
+        }
+        throw new RuntimeException("No medical delegate");
     }
 }
